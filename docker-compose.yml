@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  realtime-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: raspberry-realtime-demo
+    container_name: realtime-demo
+
+    # Required for real-time scheduling (SCHED_FIFO)
+    privileged: true
+
+    # Alternative to privileged mode (more secure, but may not work on all systems)
+    # cap_add:
+    #   - SYS_NICE
+    #   - SYS_RESOURCE
+    #   - IPC_LOCK
+
+    # Interactive terminal
+    stdin_open: true
+    tty: true
+
+    # Mount source code for live editing
+    volumes:
+      - ./examples:/app/examples
+      - ./README.md:/app/README.md
+
+    # Resource limits (optional)
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '2.0'
+    #       memory: 1G
+
+    working_dir: /app
+
+    # Keep container running
+    command: /bin/bash
