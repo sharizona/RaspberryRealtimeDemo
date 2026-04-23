@@ -16,3 +16,24 @@ This project demonstrates real-time system concepts, scheduling policies, and em
 - **Hard Real-Time**: Missing a deadline causes system failure (e.g., airbag deployment, pacemaker)
 - **Soft Real-Time**: Missing deadlines degrades performance but doesn't cause failure (e.g., video streaming, audio playback)
 - **Firm Real-Time**: Missing occasional deadlines is tolerable, but repeated misses are unacceptable (e.g., stock trading systems)
+
+### Key Characteristics:
+- **Deterministic**: Predictable response times
+- **Time Constraints**: Operations must complete within deadlines
+- **Priority-based**: Critical tasks get CPU time first
+- **Low Latency**: Minimal delay between event and response
+
+## What is an Embedded System?
+
+**Embedded System**: A computer system with dedicated functions within a larger mechanical or electrical system, typically with real-time computing constraints.
+
+### Characteristics:
+- **Purpose-specific**: Designed for specific tasks
+- **Resource-constrained**: Limited CPU, memory, power
+- **Reliability**: Must operate continuously without failure
+- **Often Real-Time**: Many embedded systems have timing requirements
+
+### Overlap:
+- Most embedded systems have real-time requirements
+- Not all real-time systems are embedded (e.g., stock trading servers)
+- Raspberry Pi can function as an embedded system when deployed in dedicated applications
