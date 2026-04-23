@@ -78,3 +78,63 @@ This project demonstrates real-time system concepts, scheduling policies, and em
 ### 7. **Testing and Validation**
    - Must test worst-case scenarios
    - Difficult to reproduce timing-dependent bugs
+
+## Examples of Real-Time System Implementations
+
+### 1. **Cyclic Executive (Time-Triggered)**
+Simple, deterministic scheduling using fixed time slots.
+
+**Example Systems:**
+- Simple industrial controllers
+- Automotive ECUs (Engine Control Units)
+- Aircraft flight control systems
+
+**Characteristics:**
+- Fixed schedule computed offline
+- No OS overhead
+- Highly predictable but inflexible
+- Tasks execute in predefined sequence
+
+**Pros:** Ultra-low overhead, deterministic
+**Cons:** Inflexible, hard to modify, poor CPU utilization
+
+### 2. **Real-Time Operating Systems (RTOS)**
+Specialized OS designed for real-time applications.
+
+**Example Systems:**
+- **FreeRTOS**: IoT devices, microcontrollers
+- **VxWorks**: Mars Rovers, Boeing 787, medical devices
+- **QNX**: Automotive infotainment, BlackBerry OS
+- **Zephyr**: Industrial IoT, wearables
+- **RTLinux/RTAI**: Industrial automation
+
+**Characteristics:**
+- Preemptive priority-based scheduling
+- Fast context switching
+- Minimal interrupt latency
+- Deterministic behavior
+
+**Pros:** Flexible, reusable, priority-driven
+**Cons:** More overhead than cyclic executive
+
+### 3. **Operating Systems with Real-Time Extensions**
+General-purpose OS modified for real-time capabilities.
+
+**Example Systems:**
+- **Linux with PREEMPT_RT patch**: Industrial PCs, robotics
+- **Windows with RTX**: Manufacturing automation
+- **Raspberry Pi OS with RT kernel**: Educational projects, prototypes
+
+**Characteristics:**
+- Adds real-time features to standard OS
+- Allows running non-RT and RT tasks together
+- More features than pure RTOS (networking, filesystems)
+
+**Pros:** Rich feature set, familiar environment
+**Cons:** Less deterministic than pure RTOS, higher overhead
+
+**Use Cases:**
+- Raspberry Pi projects requiring soft real-time
+- Mixed systems (RT control + non-RT UI/networking)
+- Development and prototyping
+
