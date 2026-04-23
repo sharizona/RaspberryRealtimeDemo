@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+*~
+
+# Python
+.venv
+venv
+__pycache__
+*.pyc
+
+# Compiled binaries
+examples/*/basic_pthread
+examples/*/realtime_pthread
+examples/*/sched_comparison
+examples/*/priority_inversion
+
+# macOS
+.DS_Store
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
