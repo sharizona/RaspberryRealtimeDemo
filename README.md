@@ -48,3 +48,33 @@ This project demonstrates real-time system concepts, scheduling policies, and em
 | **Predictability** | Variable, unpredictable | Deterministic, bounded |
 | **Latency** | Can be high and variable | Must be low and consistent |
 | **Example** | Web server, batch processing | Industrial control, medical devices |
+
+## Challenges of Real-Time Systems
+
+### 1. **Timing Predictability**
+   - Must guarantee worst-case execution time (WCET)
+   - Difficult with modern CPUs (caches, pipelines, branch prediction)
+
+### 2. **Interrupt Latency**
+   - Time from interrupt occurrence to handler execution must be bounded
+   - Regular OS may have unbounded interrupt disable periods
+
+### 3. **Priority Inversion**
+   - Low-priority task holds resource needed by high-priority task
+   - Solved with priority inheritance or priority ceiling protocols
+
+### 4. **Scheduling**
+   - Must prove all tasks meet deadlines (schedulability analysis)
+   - Rate Monotonic Analysis (RMA), Deadline Monotonic Analysis (DMA)
+
+### 5. **Resource Constraints**
+   - Limited memory, CPU power in embedded systems
+   - No virtual memory or dynamic allocation in hard real-time
+
+### 6. **Jitter**
+   - Variation in task execution timing
+   - Must be minimized for control systems
+
+### 7. **Testing and Validation**
+   - Must test worst-case scenarios
+   - Difficult to reproduce timing-dependent bugs
