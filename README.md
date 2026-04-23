@@ -156,6 +156,124 @@ General-purpose OS modified for real-time capabilities.
 
 ## Project Structure
 
+| Path | Description |
+|------|-------------|
+| `examples/01_basic_pthread/` | Best Effort scheduling |
+| `examples/02_realtime_pthread/` | SCHED_FIFO example |
+| `examples/03_scheduling_comparison/` | Compare policies |
+| `examples/04_priority_inversion/` | Demonstrate and solve priority inversion |
+| `docs/scheduling_analysis.md` | Theoretical background |
+| `README.md` | Project documentation |
+| `run-docker.sh` | Interactive script to run examples in Docker |
+| `Dockerfile` & `docker-compose.yml` | Container configuration for real-time environment |
 
+## Getting Started
 
+### Option 1: Using Docker (Recommended for Full RT Support)
 
+Docker provides a Linux environment with full POSIX real-time scheduling support, even on macOS/Windows.
+
+#### Method A: Interactive Menu Script (Easiest)
+
+```bash
+# Run the interactive menu
+./run-docker.sh
+
+# Follow the menu:
+# 1) Build and start container
+# 2) Enter running container (interactive shell)
+# 3-6) Run individual examples
+# 7) Stop container
+```
+
+#### Method B: Manual Docker Commands
+
+```bash
+# Step 1: Build and start the container
+docker-compose up -d --build
+
+# Step 2: Enter the container
+docker-compose exec realtime-demo /bin/bash
+
+# Step 3: Inside container - Rebuild examples for ARM64 (Mac M1/M2/M3/M4)
+# Note: Only needed on first run or after code changes
+cd /app
+make -C examples/01_basic_pthread clean && make -C examples/01_basic_pthread
+make -C examples/02_realtime_pthread clean && make -C examples/02_realtime_pthread
+make -C examples/03_scheduling_comparison clean && make -C examples/03_scheduling_comparison
+make -C examples/04_priority_inversion clean && make -C examples/04_priority_inversion
+
+# Step 4: Run examples (in order recommended)
+# Example 1: Basic pthread (SCHED_OTHER - fair scheduling)
+cd /app/examples/01_basic_pthread && ./basic_pthread
+
+# Example 2: Real-time pthread (SCHED_FIFO - strict priority)
+cd /app/examples/02_realtime_pthread && ./realtime_pthread
+
+# Example 3: Scheduling comparison (SCHED_OTHER vs SCHED_FIFO)
+cd /app/examples/03_scheduling_comparison && ./sched_comparison
+
+# Example 4: Priority inversion demo (Mars Pathfinder bug!)
+cd /app/examples/04_priority_inversion && ./priority_inversion
+
+# Step 5: Exit container
+exit
+
+# Step 6: Stop container
+docker-compose down
+```
+
+**Why Docker?**
+- ✅ Full Linux kernel with POSIX RT scheduling
+- ✅ Works on macOS, Windows, and Linux
+- ✅ Privileged mode for SCHED_FIFO support
+- ✅ Isolated environment, no system conflicts
+- ✅ Easy to reset and reproduce results
+
+### Option 2: Native Linux/Raspberry Pi
+
+```bash
+# Install build tools
+sudo apt-get install build-essential
+
+# For Raspberry Pi: Install RT kernel (optional for best results)
+sudo apt-get install linux-image-rt-arm64
+
+# Build and run
+cd examples/01_basic_pthread
+make
+./basic_pthread  # Example 1 doesn't need sudo
+
+# Real-time examples need sudo
+cd examples/02_realtime_pthread
+make
+sudo ./realtime_pthread
+```
+
+### Option 3: macOS/Windows (Limited RT Support)
+
+```bash
+# Build examples (only basic_pthread will work correctly)
+cd examples/01_basic_pthread
+make
+./basic_pthread
+
+# Note: SCHED_FIFO examples won't work on macOS
+# Use Docker for full functionality
+```
+
+## Testing Environments Comparison
+
+| Environment | SCHED_OTHER | SCHED_FIFO | Priority Inheritance | Recommended For |
+|-------------|-------------|------------|---------------------|-----------------|
+| **Docker** | ✅ Full | ✅ Full | ✅ Full | Development & Learning |
+| **Raspberry Pi** | ✅ Full | ✅ Full | ✅ Full | Deployment & Hardware |
+| **Linux Native** | ✅ Full | ✅ Full | ✅ Full | Development |
+| **macOS** | ✅ Basic | ❌ Limited | ❌ No | Code Testing Only |
+| **Windows** | ⚠️ Basic | ❌ No | ❌ No | Use Docker |
+
+## Next Steps
+
+1. Study the example code in `examples/`
+2. Run benchmarks comparing scheduling policies
+3. Read `docs/scheduling_analysis.md` for in-depth theory
