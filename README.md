@@ -37,3 +37,14 @@ This project demonstrates real-time system concepts, scheduling policies, and em
 - Most embedded systems have real-time requirements
 - Not all real-time systems are embedded (e.g., stock trading servers)
 - Raspberry Pi can function as an embedded system when deployed in dedicated applications
+
+## Real-Time vs Non-Real-Time Systems
+
+| Aspect | Non-Real-Time | Real-Time |
+|--------|--------------|-----------|
+| **Goal** | Maximize throughput | Meet deadlines |
+| **Performance Metric** | Average response time | Worst-case response time |
+| **Scheduling** | Fair sharing (time-slicing) | Priority-based, preemptive |
+| **Predictability** | Variable, unpredictable | Deterministic, bounded |
+| **Latency** | Can be high and variable | Must be low and consistent |
+| **Example** | Web server, batch processing | Industrial control, medical devices |
