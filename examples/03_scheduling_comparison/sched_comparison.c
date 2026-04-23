@@ -24,6 +24,7 @@
 #include <sched.h>
 #include <sys/mman.h>
 #include <math.h>
+#include "../telemetry.h"
 
 #define NUM_SAMPLES 1000
 #define SLEEP_INTERVAL_US 1000  // 1ms target
@@ -157,6 +158,12 @@ void run_latency_test(int policy, int priority, const char* policy_name) {
     // Calculate and print statistics
     double avg, min, max, std_dev, jitter;
     calculate_stats(&data, &avg, &min, &max, &std_dev, &jitter);
+
+    char telemetry[2048];
+    snprintf(telemetry, sizeof(telemetry), 
+             "{\"policy\": \"%s\", \"threads\": [{\"id\": 1, \"priority\": %d, \"work_count\": %d, \"elapsed_ms\": %.2f, \"work_rate\": %.2f}]}",
+             policy_name, priority, data.sample_count, avg, 1000.0/avg);
+    send_telemetry(telemetry);
 
     printf("Samples collected: %d\n", data.sample_count);
     printf("Average latency: %.2f μs\n", avg);

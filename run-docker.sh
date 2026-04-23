@@ -66,7 +66,8 @@ run_example() {
     echo ""
     echo "Running: $example_name"
     echo "----------------------------------------"
-    docker-compose exec realtime-demo bash -c "cd $example_path && ./$example_name"
+    # Ensure it's compiled inside the container before running
+    docker-compose exec realtime-demo bash -c "cd $example_path && make clean && make && ./$example_name"
     echo ""
     read -p "Press Enter to continue..."
 }

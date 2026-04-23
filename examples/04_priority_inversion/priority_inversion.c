@@ -25,6 +25,7 @@
 #include <time.h>
 #include <errno.h>
 #include <sched.h>
+#include "../telemetry.h"
 
 #define HIGH_PRIORITY 80
 #define MED_PRIORITY 50
@@ -180,6 +181,12 @@ void run_scenario(int use_priority_inheritance, const char* scenario_name) {
     pthread_join(high_thread, NULL);
     pthread_join(med_thread, NULL);
     pthread_join(low_thread, NULL);
+
+    char telemetry[2048];
+    snprintf(telemetry, sizeof(telemetry), 
+             "{\"policy\": \"PRIO_INVERSION_%s\", \"threads\": [{\"id\": 1, \"priority\": %d, \"work_count\": %d, \"elapsed_ms\": 0, \"work_rate\": 0}]}",
+             use_priority_inheritance ? "INHERIT" : "NONE", HIGH_PRIORITY, inversion_detected);
+    send_telemetry(telemetry);
 
     // Cleanup
     pthread_attr_destroy(&attr_high);

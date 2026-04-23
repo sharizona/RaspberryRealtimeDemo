@@ -163,6 +163,7 @@ General-purpose OS modified for real-time capabilities.
 | `examples/03_scheduling_comparison/` | Compare policies |
 | `examples/04_priority_inversion/` | Demonstrate and solve priority inversion |
 | `docs/scheduling_analysis.md` | Theoretical background |
+| `docs/ui_setup.md` | Step-by-step UI guide |
 | `README.md` | Project documentation |
 | `run-docker.sh` | Interactive script to run examples in Docker |
 | `Dockerfile` & `docker-compose.yml` | Container configuration for real-time environment |
@@ -171,7 +172,7 @@ General-purpose OS modified for real-time capabilities.
 
 ### Option 1: Using Docker (Recommended for Full RT Support)
 
-Docker provides a Linux environment with full POSIX real-time scheduling support, even on macOS/Windows.
+Docker provides a Linux environment with full POSIX real-time scheduling support, even on macOS/Windows. **Compiling and executing happen inside the container to ensure compatibility.**
 
 #### Method A: Interactive Menu Script (Easiest)
 
@@ -182,8 +183,9 @@ Docker provides a Linux environment with full POSIX real-time scheduling support
 # Follow the menu:
 # 1) Build and start container
 # 2) Enter running container (interactive shell)
-# 3-6) Run individual examples
+# 3-6) Run individual examples (automatically compiles and executes inside)
 # 7) Stop container
+# 8) Clean up
 ```
 
 #### Method B: Manual Docker Commands
@@ -192,35 +194,15 @@ Docker provides a Linux environment with full POSIX real-time scheduling support
 # Step 1: Build and start the container
 docker-compose up -d --build
 
-# Step 2: Enter the container
+# Step 2: Run examples directly (automatically compiles inside)
+docker-compose exec realtime-demo bash -c "cd examples/01_basic_pthread && make clean && make && ./basic_pthread"
+
+# Step 3: Or enter the container to work manually
 docker-compose exec realtime-demo /bin/bash
 
-# Step 3: Inside container - Rebuild examples for ARM64 (Mac M1/M2/M3/M4)
-# Note: Only needed on first run or after code changes
-cd /app
-make -C examples/01_basic_pthread clean && make -C examples/01_basic_pthread
-make -C examples/02_realtime_pthread clean && make -C examples/02_realtime_pthread
-make -C examples/03_scheduling_comparison clean && make -C examples/03_scheduling_comparison
-make -C examples/04_priority_inversion clean && make -C examples/04_priority_inversion
-
-# Step 4: Run examples (in order recommended)
-# Example 1: Basic pthread (SCHED_OTHER - fair scheduling)
-cd /app/examples/01_basic_pthread && ./basic_pthread
-
-# Example 2: Real-time pthread (SCHED_FIFO - strict priority)
-cd /app/examples/02_realtime_pthread && ./realtime_pthread
-
-# Example 3: Scheduling comparison (SCHED_OTHER vs SCHED_FIFO)
-cd /app/examples/03_scheduling_comparison && ./sched_comparison
-
-# Example 4: Priority inversion demo (Mars Pathfinder bug!)
-cd /app/examples/04_priority_inversion && ./priority_inversion
-
-# Step 5: Exit container
-exit
-
-# Step 6: Stop container
-docker-compose down
+# Inside container:
+cd /app/examples/01_basic_pthread
+make clean && make run
 ```
 
 **Why Docker?**
@@ -276,4 +258,5 @@ make
 
 1. Study the example code in `examples/`
 2. Run benchmarks comparing scheduling policies
-3. Read `docs/scheduling_analysis.md` for in-depth theory
+3. Follow the [UI Visualization Setup Guide](docs/ui_setup.md) to run the Unreal Engine demo
+4. Read `docs/scheduling_analysis.md` for in-depth theory

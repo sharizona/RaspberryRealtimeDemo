@@ -26,6 +26,7 @@
 #include <errno.h>
 #include <sched.h>
 #include <sys/mman.h>
+#include "../telemetry.h"
 
 #define NUM_THREADS 3
 #define WORK_ITERATIONS 1000000
@@ -215,18 +216,30 @@ int main(int argc, char* argv[]) {
     printf("Results\n");
     printf("===========================================\n\n");
 
+    char telemetry[2048];
+    char thread_json[512];
+    snprintf(telemetry, sizeof(telemetry), "{\"policy\": \"SCHED_FIFO\", \"threads\": [");
+
     long long total_work = 0;
     for (int i = 0; i < NUM_THREADS; i++) {
         double elapsed = time_diff_ms(thread_data[i].start_time, thread_data[i].end_time);
         total_work += thread_data[i].work_count;
+        double work_rate = (thread_data[i].work_count * 1000.0) / elapsed;
 
         printf("Thread %d (Priority %d):\n",
                thread_data[i].thread_id, thread_data[i].priority);
         printf("  Work iterations completed: %lld\n", thread_data[i].work_count);
         printf("  Elapsed time: %.2f ms\n", elapsed);
-        printf("  Work rate: %.2f iterations/sec\n\n",
-               (thread_data[i].work_count * 1000.0) / elapsed);
+        printf("  Work rate: %.2f iterations/sec\n\n", work_rate);
+
+        snprintf(thread_json, sizeof(thread_json), 
+                 "{\"id\": %d, \"priority\": %d, \"work_count\": %lld, \"elapsed_ms\": %.2f, \"work_rate\": %.2f}%s",
+                 thread_data[i].thread_id, thread_data[i].priority, thread_data[i].work_count, elapsed, work_rate,
+                 (i == NUM_THREADS - 1) ? "" : ", ");
+        strcat(telemetry, thread_json);
     }
+    strcat(telemetry, "]}");
+    send_telemetry(telemetry);
 
     printf("Total work across all threads: %lld iterations\n\n", total_work);
 
